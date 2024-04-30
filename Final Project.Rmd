@@ -1,0 +1,247 @@
+---
+title: "Final Project"
+author: "Bill Huang"
+date: "4/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls())
+cat("\014")
+```
+
+```{r}
+data <- data.frame(read.csv("Life Expectancy Data.csv"))
+Status2 <- ifelse(data$Status == "Developed", 1,0)
+data <- cbind(data, Status2)
+df <- na.exclude(data)
+library(mgcv)
+```
+
+```{r}
+plot(data$Alcohol, data$Life.expectancy)
+fit <- lm(Life.expectancy ~ Alcohol, data = data)
+abline(fit$coefficient[1], fit$coefficient[2], col="red")
+fit_log <- lm(log(Life.expectancy) ~ Alcohol, data = data)
+
+```
+
+
+```{r}
+fit_gam <- gam(Life.expectancy ~ s(Alcohol), data = df)
+plot(df$Alcohol, df$Life.expectancy)
+lines(df$Alcohol, fitted(fit_gam), col="red")
+```
+
+```{r}
+df_2000 <- data[data$Year=="2000",]
+fit_2000 <- lm(df_2000$Life.expectancy ~ df_2000$Alcohol)
+plot(df_2000$Alcohol, df_2000$Life.expectancy, xlab="Alcohol consumption in 2000", ylab="Life expectancy in 2000")
+abline(a = fit_2000$coefficient[1], 
+       b = fit_2000$coefficient[2], 
+       col="red")
+summary(fit_2000)
+```
+
+```{r}
+df_2001 <- data[data$Year=="2001",]
+fit_2001 <- lm(df_2001$Life.expectancy ~ df_2001$Alcohol)
+plot(df_2001$Alcohol, df_2001$Life.expectancy, xlab="Alcohol consumption in 2001", ylab="Life expectancy in 2001")
+abline(a = fit_2001$coefficient[1], 
+       b = fit_2001$coefficient[2], 
+       col="red")
+summary(fit_2001)
+```
+
+```{r}
+df_2002 <- data[data$Year=="2002",]
+fit_2002 <- lm(df_2002$Life.expectancy ~ df_2002$Alcohol)
+plot(df_2002$Alcohol, df_2002$Life.expectancy, xlab="alcohol consumption in 2002", ylab="Life expectancy in 2002")
+abline(a = fit_2002$coefficient[1], 
+       b = fit_2002$coefficient[2], 
+       col="red")
+summary(fit_2002)
+```
+
+
+```{r}
+df_2012 <- data[data$Year=="2012",]
+fit_2012 <- lm(df_2012$Life.expectancy ~ df_2012$Alcohol)
+plot(df_2012$Alcohol, df_2012$Life.expectancy, xlab="alcohol consumption in 2012", ylab="Life expectancy in 2012")
+abline(a = fit_2012$coefficient[1], 
+       b = fit_2012$coefficient[2], 
+       col="red")
+summary(fit_2012)
+```
+
+
+```{r}
+df_2013 <- data[data$Year=="2013",]
+fit_2013 <- lm(df_2013$Life.expectancy ~ df_2013$Alcohol)
+plot(df_2013$Alcohol, df_2013$Life.expectancy, xlab="alcohol consumption in 2013", ylab="Life expectancy in 2013")
+abline(a = fit_2013$coefficient[1], 
+       b = fit_2013$coefficient[2], 
+       col="red")
+summary(fit_2013)
+```
+
+
+```{r}
+df_developing <- data[data$Status=="Developing", ]
+df_developed <- data[data$Status=="Developed", ]
+fit_developing <- lm(df_developing$Life.expectancy ~ df_developing$Alcohol)
+plot(df_developing$Alcohol, df_developing$Life.expectancy)
+abline(a = fit_developing$coefficient[1],
+       b = fit_developing$coefficient[2],
+       col = "red")
+summary(fit_developing)
+
+fit_developed <- lm(df_developed$Life.expectancy ~ df_developed$Alcohol)
+plot(df_developed$Alcohol, df_developed$Life.expectancy)
+abline(a = fit_developed$coefficient[1],
+       b = fit_developed$coefficient[2],
+       col = "red")
+summary(fit_developed)
+
+
+```
+
+```{r}
+df_developing_2000 <- df_developing[df_developing$Year == "2000",]
+plot(df_developing_2000$Alcohol, df_developing_2000$Life.expectancy)
+fit_developing_2000 <- lm(df_developing_2000$Life.expectancy ~ df_developing_2000$Alcohol)
+abline(a = fit_developing_2000$coefficients[1],
+       b = fit_developing_2000$coefficients[2],
+       col="red")
+summary(fit_developing_2000)
+
+df_developed_2000 <- df_developed[df_developed$Year == "2000",]
+plot(df_developed_2000$Alcohol, df_developed_2000$Life.expectancy)
+fit_developed_2000 <- lm(df_developed_2000$Life.expectancy ~ df_developed_2000$Alcohol)
+abline(a = fit_developed_2000$coefficients[1],
+       b = fit_developed_2000$coefficients[2],
+       col="red")
+summary(fit_developed_2000)
+
+
+```
+
+```{r}
+df_developing_2005 <- df_developing[df_developing$Year == "2005",]
+plot(df_developing_2005$Alcohol, df_developing_2005$Life.expectancy)
+fit_developing_2005 <- lm(df_developing_2005$Life.expectancy ~ df_developing_2005$Alcohol)
+abline(a = fit_developing_2005$coefficients[1],
+       b = fit_developing_2005$coefficients[2],
+       col="red")
+summary(fit_developing_2005)
+
+
+df_developed_2005 <- df_developed[df_developed$Year == "2005",]
+plot(df_developed_2005$Alcohol, df_developed_2005$Life.expectancy)
+fit_developed_2005 <- lm(df_developed_2005$Life.expectancy ~                                               df_developed_2005$Alcohol)
+abline(a = fit_developed_2005$coefficients[1],
+       b = fit_developed_2005$coefficients[2],
+       col="red")
+summary(fit_developed_2005)
+
+```
+
+```{r}
+fit_gam <- gam(Life.expectancy ~ s(Alcohol), data = df_developing)
+summary(fit_gam)
+plot(fit_gam, shade=T)
+```
+
+
+
+```{r}
+
+fit_null <- lm(Life.expectancy ~ 1, data = df)
+fit_full <- lm (Life.expectancy ~ Adult.Mortality + infant.deaths + Alcohol +
+                percentage.expenditure + Hepatitis.B + Measles + BMI + 
+                under.five.deaths + Polio + Total.expenditure + Diphtheria +                      HIV.AIDS + GDP + Population + thinness..1.19.years +                              thinness.5.9.years  + Income.composition.of.resources + Schooling +                Status2, data = df)
+step(fit_null , direction = "forward", scope = formula(fit_full))
+
+
+
+```
+     After computing forward method of AIC, it appears that we had excluded 
+"Hepatitis.B", "Measles", "Polio", "GDP", "Population", "as well as 
+"prevalence of thinness among children and adolescents between 10 to 19" from all 
+the variables.
+      The best model by forward method : Life.expectancy ~ Schooling + HIV.AIDS + 
+Adult.Mortality + Income.composition.of.resources + 
+percentage.expenditure + BMI + Diphtheria + under.five.deaths + 
+infant.deaths + thinness.5.9.years + Total.expenditure + Alcohol
+```{r}
+anova(fit_null, fit_full)
+```
+
+
+
+```{r}
+y <- df$Life.expectancy
+X <- model.matrix(~Adult.Mortality + infant.deaths + Alcohol + 
+                    percentage.expenditure + BMI + under.five.deaths + 
+                    Total.expenditure + Diphtheria + HIV.AIDS + thinness.5.9.years                    + Income.composition.of.resources + Schooling + Status2, 
+                  data = df)
+fit_best <- lm(y ~ X)
+summary(fit_best)
+XtX = t(X)%*%X
+invXtX = solve(XtX)
+Xty = t(X)%*%y
+beta_hat = invXtX%*%Xty
+plot(fit_best)
+
+```
+
+
+```{r}
+split <- sample(c(rep(0, 0.7*nrow(df)),
+                  rep(1, 0.3*nrow(df))))
+df_train <- df[split == 0,]
+df_test <- df[split == 1, ]
+fit_train <- lm(Life.expectancy ~ Adult.Mortality + infant.deaths + Alcohol + 
+                    percentage.expenditure + BMI + under.five.deaths + 
+                    Total.expenditure + Diphtheria + HIV.AIDS +                                       thinness.5.9.years + Income.composition.of.resources +                            Schooling + Status2, 
+                    data = df_train)
+predict <- predict(fit_train,
+                   newdata = df_test,
+                   interval = "predict",
+                   level = 0.9)
+mean(abs(df_test$Life.expectancy - predict))
+max(df_test$Life.expectancy - predict)
+mean((df_test$Life.expectancy - predict)^2)
+hist(abs(df_test$Life.expectancy - predict))
+
+```
+
+
+
+```{r}
+fit_gam2 <- gam(y ~ Adult.Mortality + infant.deaths + Alcohol + 
+                    percentage.expenditure + BMI + under.five.deaths + 
+                    s(Total.expenditure) + Diphtheria + HIV.AIDS +                                    s(thinness.5.9.years) + Income.composition.of.resources +                         Schooling, 
+                    data = df)
+plot(fit_gam2, shade=T)
+```
+
+```{r}
+library(glmnet)
+fit.cv1 <- cv.glmnet(X,
+                     y,
+                     alpha = 0)
+coef(fit.cv1)
+plot(fit.cv1)
+fit.cv1$lambda.min
+
+
+fit.cv2 <- cv.glmnet(X,
+                     y,
+                     alpha = 1)
+plot(fit.cv2)
+fit.cv2$lambda.min
+coef(fit.cv2)
+```
+
